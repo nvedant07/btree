@@ -1,0 +1,11 @@
+2 a a
+1 a a
+3 a a
+4 a a
+10 a a
+6 a a
+11 a a
+12 a a
+123 a a
+111 a a
+87 a a
