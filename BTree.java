@@ -42,11 +42,23 @@ class NodeUnit extends DataUnit{
 	public DataUnit getPtr(int ind){
 		return ptrs[ind];
 	}
+	public Node getElem(int ind){
+		return elem[ind];
+	}
 	public void decElem(){
 		eInd--;
 	}
 	public int getCount(){
 		return count;
+	}
+	public DataUnit checkBelong(int n){
+		for (int i=0; i<count; i++){
+			if (elem[i].getData() > n)
+				return ptrs[i];
+		}
+		if (ptrs[count] == null)
+			return ptrs[count-1];
+		return ptrs[count];
 	}
 	public boolean isLeaf(){
 		if (ptrs[0] instanceof FileUnit){
@@ -144,6 +156,21 @@ abstract class Tree{
 		count+=maxval;
 		return count;
 	}
+	public void retRecord(int n){
+		NodeUnit s = root;
+		DataUnit c;
+		while (!((c = s.checkBelong(n)) instanceof FileUnit)){
+			s = (NodeUnit)c;
+		}
+		for (int i=0; i<s.getCount(); i++){
+			if (s.getElem(i).getData() == n){
+				c = s.getPtr(i);
+				System.out.println("Index of search: "+((FileUnit)c).getIndex());
+				return;
+			}
+		}
+		System.out.println("Record Not Found!");
+	}
 	abstract public void makeTree(String file);
 }
 class TopDown extends Tree{
@@ -239,7 +266,8 @@ public class BTree{
 		// external_merge_sort sort = new external_merge_sort("input.txt", 4);
 		Tree bup = new BottomUp();
 		bup.makeTree("input-sorted.txt");
-		bup.printTree();
+		// bup.printTree();
 		System.out.println(bup.findNodes()+" "+bup.findHeight());
+		bup.retRecord(1000);
 	}
 }
