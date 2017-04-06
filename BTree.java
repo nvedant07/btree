@@ -59,6 +59,9 @@ class FileUnit extends DataUnit{
 	public FileUnit(int _index){
 		index = _index;
 	}
+	public int getIndex(){
+		return index;
+	}
 }
 class Node{
 	private int data;
@@ -148,7 +151,12 @@ public class BTree{
 		}
 	}
 	public void printRec(DataUnit d){
-		if (d == null || d instanceof FileUnit){
+		if (d == null){
+			return;
+		}
+		if (d instanceof FileUnit){
+			FileUnit d2 = (FileUnit)d;
+			System.out.println("File Index: "+d2.getIndex());
 			return;
 		}
 		NodeUnit d2 = (NodeUnit)d;
