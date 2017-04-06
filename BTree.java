@@ -1,3 +1,6 @@
+import java.io.*;
+import java.util.*;
+
 abstract class DataUnit{
 
 }
@@ -110,25 +113,38 @@ public class BTree{
 		}
 		return u;
 	}
-	public void makeTree(){
+	public void makeTree(String file){
 		//read file
-		int[] list = {1,2,3,4,5,6,7,8,9,10,11,12,13,14};
-		int i = 0;
-		NodeUnit u = new NodeUnit();
-		root = u;
-		for (int a : list){
-			Node n = new Node(a);
-			FileUnit f = new FileUnit(i);
-			i++;
-			if (u.isFull()){
-				NodeUnit temp = newContainer(f,n,u);
-				u.putPtr(temp);
-				u = temp;
+		try{
+			FileInputStream fstream = new FileInputStream(file);
+			BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
+			int[] list = {1,2,3,4,5,6,7,8,9,10,11,12,13,14};
+			int i = 0;
+			NodeUnit u = new NodeUnit();
+			root = u;
+			String c;
+			while ((c = br.readLine()) != null){
+				c = c.split(" ")[0];
+				int a = Integer.parseInt(c);
+				// System.out.println(a);
+				Node n = new Node(a);
+				FileUnit f = new FileUnit(i);
+				i++;
+				if (u.isFull()){
+					NodeUnit temp = newContainer(f,n,u);
+					u.putPtr(temp);
+					u = temp;
+				}
+				else{
+					u.putPtr(f);
+					u.putElem(n);
+				}
 			}
-			else{
-				u.putPtr(f);
-				u.putElem(n);
-			}
+			br.close();
+			fstream.close();
+		}
+		catch (IOException excep){
+			System.out.println("Sorted File not Found!");
 		}
 	}
 	public void printRec(DataUnit d){
@@ -136,12 +152,13 @@ public class BTree{
 			return;
 		}
 		NodeUnit d2 = (NodeUnit)d;
+		int till = 4;
 		if (d2.isLeaf()){
-			return;
+			till = 3;
 		}
 		d2.printElem();
 		System.out.println();
-		for (int i=0; i<4; i++){
+		for (int i=0; i<till; i++){
 			printRec(d2.getPtr(i));
 		}
 
@@ -151,8 +168,9 @@ public class BTree{
 
 	}
 	public static void main(String[] args) {
+		external_merge_sort sort = new external_merge_sort("input.txt", 4);
 		BTree btree = new BTree();
-		btree.makeTree();
+		btree.makeTree("input-sorted.txt");
 		btree.printTree();
 	}
 }
