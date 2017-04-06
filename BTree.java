@@ -5,14 +5,15 @@ abstract class DataUnit{
 
 }
 class NodeUnit extends DataUnit{
-	private Node[] elem = new Node[3];
-	private DataUnit[] ptrs = new DataUnit[4];
+	public static int max = 4; 
+	private Node[] elem = new Node[max-1];
+	private DataUnit[] ptrs = new DataUnit[max];
 	private NodeUnit prnt;
 	private int eInd = 0;
 	private int count = 0;
 	private int pInd = 0;
 	public boolean isFull(){
-		if (eInd == 3)
+		if (eInd == max-1)
 			return true;
 		else
 			return false;
@@ -44,6 +45,9 @@ class NodeUnit extends DataUnit{
 	public void decElem(){
 		eInd--;
 	}
+	public int getCount(){
+		return count;
+	}
 	public boolean isLeaf(){
 		if (ptrs[0] instanceof FileUnit){
 			return true;
@@ -72,8 +76,82 @@ class Node{
 		return data;
 	}
 }
-public class BTree{
-	private NodeUnit root;
+abstract class Tree{
+	protected NodeUnit root;
+	public NodeUnit getRoot(){
+		return root;
+	}
+	public void printRec(DataUnit d){
+		if (d == null){
+			return;
+		}
+		if (d instanceof FileUnit){
+			FileUnit d2 = (FileUnit)d;
+			System.out.println("File Index: "+d2.getIndex());
+			return;
+		}
+		NodeUnit d2 = (NodeUnit)d;
+		int till = NodeUnit.max;
+		if (d2.isLeaf()){
+			till--;
+		}
+		d2.printElem();
+		System.out.println();
+		for (int i=0; i<till; i++){
+			printRec(d2.getPtr(i));
+		}
+	}
+	public void printTree(){
+		printRec(root);
+	}
+	public int findNodes(){
+		return getNodes(root);
+	}
+	public int findHeight(){
+		return getHeight(root);
+	}
+	public int getNodes(DataUnit d){
+		if (d == null || d instanceof FileUnit){
+			return 0;
+		}
+		NodeUnit d2 = (NodeUnit)d;
+		int till = NodeUnit.max;
+		if (d2.isLeaf()){
+			till--;
+		}
+		int count = 1;
+		for (int i=0; i<till; i++){
+			count+=getNodes(d2.getPtr(i));
+		}
+		return count;
+	}
+	public int getHeight(DataUnit d){
+		if (d == null || d instanceof FileUnit){
+			return 0;
+		}
+		NodeUnit d2 = (NodeUnit)d;
+		int till = NodeUnit.max;
+		if (d2.isLeaf()){
+			till--;
+		}
+		int count = 1;
+		int maxval = 0;
+		for (int i=0; i<till; i++){
+			int var = getHeight(d2.getPtr(i));
+			if (var > maxval)
+				maxval = var;
+		}
+		count+=maxval;
+		return count;
+	}
+	abstract public void makeTree(String file);
+}
+class TopDown extends Tree{
+	public void makeTree(String file){
+
+	}
+}
+class BottomUp extends Tree{
 	public void createPrnt(NodeUnit a, NodeUnit b){
 		NodeUnit n = new NodeUnit();
 		root = n;
@@ -83,7 +161,6 @@ public class BTree{
 		//here
 		if (!b.isLeaf()){
 			Node temp = new Node(b.getTop().getData()+1);
-			// n.putElem(temp);
 			b.decElem();
 			b.putElem(temp);
 			b.decElem();
@@ -101,6 +178,14 @@ public class BTree{
 			prnt.putPtr(d);
 			prnt.putElem(d.getTop());
 			d.setPrnt(prnt);
+			//here
+			if (!d.isLeaf()){
+				Node temp = new Node(d.getTop().getData()+1);
+				d.decElem();
+				d.putElem(temp);
+				d.decElem();
+			}
+			//end
 		}
 	}
 	public NodeUnit newContainer(DataUnit d, Node n, NodeUnit old){
@@ -117,11 +202,10 @@ public class BTree{
 		return u;
 	}
 	public void makeTree(String file){
-		//read file
 		try{
 			FileInputStream fstream = new FileInputStream(file);
 			BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
-			int[] list = {1,2,3,4,5,6,7,8,9,10,11,12,13,14};
+			// int[] list = {1,2,3,4,5,6,7,8,9,10,11,12,13,14};
 			int i = 0;
 			NodeUnit u = new NodeUnit();
 			root = u;
@@ -129,7 +213,6 @@ public class BTree{
 			while ((c = br.readLine()) != null){
 				c = c.split(" ")[0];
 				int a = Integer.parseInt(c);
-				// System.out.println(a);
 				Node n = new Node(a);
 				FileUnit f = new FileUnit(i);
 				i++;
@@ -150,35 +233,13 @@ public class BTree{
 			System.out.println("Sorted File not Found!");
 		}
 	}
-	public void printRec(DataUnit d){
-		if (d == null){
-			return;
-		}
-		if (d instanceof FileUnit){
-			FileUnit d2 = (FileUnit)d;
-			System.out.println("File Index: "+d2.getIndex());
-			return;
-		}
-		NodeUnit d2 = (NodeUnit)d;
-		int till = 4;
-		if (d2.isLeaf()){
-			till = 3;
-		}
-		d2.printElem();
-		System.out.println();
-		for (int i=0; i<till; i++){
-			printRec(d2.getPtr(i));
-		}
-
-	}
-	public void printTree(){
-		printRec(root);
-
-	}
+}
+public class BTree{
 	public static void main(String[] args) {
-		external_merge_sort sort = new external_merge_sort("input.txt", 4);
-		BTree btree = new BTree();
-		btree.makeTree("input-sorted.txt");
-		btree.printTree();
+		// external_merge_sort sort = new external_merge_sort("input.txt", 4);
+		Tree bup = new BottomUp();
+		bup.makeTree("input-sorted.txt");
+		bup.printTree();
+		System.out.println(bup.findNodes()+" "+bup.findHeight());
 	}
 }
