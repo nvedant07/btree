@@ -137,6 +137,10 @@ public class external_merge_sort{
 				hp.replace_root(root);
 			}
 			fw.close();
+			int j = n + 1;
+			while(new File(Integer.toString(j)).delete()){
+				j++;
+			}
 		}
 		catch(IOException ex){
 			System.out.println("LOL");
