@@ -1,7 +1,7 @@
 import java.io.*;
 import java.util.*;
 
-//This part has been reffered from : https://gist.github.com/mikelikesbikes/4742901
+//This part has been referred from : https://gist.github.com/mikelikesbikes/4742901
 
 class BPlusTree {
 
@@ -68,24 +68,6 @@ class BPlusTree {
 	public static void readDegree(int x) {
     	new BPlusTree(x);
     }
-    
-   //  public static void main(String[] args) throws IOException {   
-   //  	BufferedReader in;
-   //      try {
-   //          in = new BufferedReader(new InputStreamReader(new FileInputStream("input-sorted.txt")));
-   //          BPlusTree.readDegree(4);
-   //          String strLine;
-			// while ((strLine = in.readLine()) != null){
-			// 	insertIntoTree(new DataNode(Integer.parseInt(strLine.split(" ")[0])));	
-			// }
-			// in.close();
-			// BPlusTree.printTree();
-
-   //      } catch (FileNotFoundException e) {
-   //          System.err.println("Error: specified file not found");
-   //      }
-   //      System.exit(0);
-   //  }
 }
 
 abstract class Node {
@@ -375,7 +357,7 @@ class DataNode {
 }
 
 
-//end
+//till here
 
 abstract class DataUnit{
 
