@@ -28,7 +28,9 @@ class BPlusTree {
             output.write("NOT FOUND" + System.getProperty("line.separator"));
         }
 	}
-
+	// public static int height;
+	// public static int count_nodes;
+	
 	@SuppressWarnings("unchecked")
     public static void printTree(){
         Vector<Node> nodeList = new Vector();
@@ -778,9 +780,16 @@ public class BTree{
 		System.out.println("Bottom Up:");
 		
 		Tree bup = new BottomUp();
+		long starttime=System.currentTimeMillis();
+		
 		bup.makeTree("input-sorted.txt");
+		
+		long end=System.currentTimeMillis();
+		
 		bup.printTree();
-		// System.out.println(bup.findNodes()+" "+bup.findHeight()+"\n");
+		
+		// System.out.println(end-starttime);
+		System.out.println("Height: "+bup.findHeight()+" Number of Nodes: "+bup.findNodes()+"\n");
 		// bup.retRecord(1000);
 
 		System.out.println("\nTop Down:");
@@ -790,12 +799,19 @@ public class BTree{
             in = new BufferedReader(new InputStreamReader(new FileInputStream("input-sorted.txt")));
             BPlusTree.readDegree(NodeUnit.max);
             String strLine;
+			
+			 starttime=System.currentTimeMillis();
+			
 			while ((strLine = in.readLine()) != null){
 				BPlusTree.insertIntoTree(new DataNode(Integer.parseInt(strLine.split(" ")[0])));	
 			}
+			 end=System.currentTimeMillis();
+
 			in.close();
 			System.out.println();
 			BPlusTree.printTree();
+		// System.out.println(end-starttime);
+
 
         } catch (IOException e) {
             System.err.println("Error: specified file not found");
@@ -807,12 +823,19 @@ public class BTree{
             in = new BufferedReader(new InputStreamReader(new FileInputStream("input.txt")));
             BPlusTree.readDegree(NodeUnit.max);
             String strLine;
+			
+			 starttime=System.currentTimeMillis();
+
 			while ((strLine = in.readLine()) != null){
 				BPlusTree.insertIntoTree(new DataNode(Integer.parseInt(strLine.split(" ")[0])));	
 			}
+			 end=System.currentTimeMillis();
+			
 			in.close();
 			System.out.println();
 			BPlusTree.printTree();
+		// System.out.println(end-starttime);
+
 
         } catch (IOException e) {
             System.err.println("Error: specified file not found");
