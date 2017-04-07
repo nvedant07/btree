@@ -712,6 +712,14 @@ class BottomUp extends Tree{
 		if (prnt.isFull()){
 			NodeUnit u = newContainer(d, d.getTop(), prnt);
 			d.setPrnt(u);
+			//here
+			if (!d.isLeaf()){
+				NodeBU temp = new NodeBU(d.getTop().getData()+1);
+				d.decElem();
+				d.putElem(temp);
+				d.decElem();
+			}
+			//end
 		}
 		else{
 			prnt.putPtr(d);
